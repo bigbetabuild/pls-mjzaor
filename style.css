@@ -1,5 +1,12 @@
 @import url('https://fonts.googleapis.com/css?family=Comfortaa:400,500,700');
 
+:root {
+    --accent: #7ce7d4;
+    --accent-dark: #44d8c3;
+    --dark-panel: rgba(33, 33, 33, 0.8);
+    --shadow: rgba(10, 18, 24, 0.6);
+}
+
 html, body {
     height: 100vh;
     width: 100%;
@@ -63,7 +70,7 @@ html, body {
     letter-spacing: .1rem;
     -webkit-backdrop-filter: blur(5px);
     backdrop-filter: blur(4px);
-    background-color: rgba(33, 33, 33, 0.8)!important;
+    background-color: var(--dark-panel)!important;
 }
 
 .navbar-nav li {
@@ -137,6 +144,24 @@ video {
     color: white;
 }
 
+.deuterium-mark {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 78px;
+    height: 78px;
+    margin-bottom: 1rem;
+    border: 2px solid rgba(124, 231, 212, 0.7);
+    border-radius: 20px;
+    background: rgba(12, 18, 24, 0.38);
+    box-shadow: 0 0 20px rgba(124, 231, 212, 0.18);
+    color: var(--accent);
+    font-weight: 700;
+    font-size: 2.1rem;
+    letter-spacing: -0.08em;
+    line-height: 1;
+}
+
 .missing-text {
     padding-top: 10rem;
 }
@@ -147,6 +172,7 @@ video {
     font-weight: 0;
     text-shadow: .1rem .1rem .8rem gray;
     padding-bottom: 1rem;
+    color: #ffffff;
 }
 
 .caption h3 {

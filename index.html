@@ -4,937 +4,201 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="theme-color" content="#0b1020">
-    <title>Deuterium Client</title>
-    <style>
-        :root {
-            --bg: #0b1020;
-            --bg-2: #101827;
-            --panel: #121c2d;
-            --panel-soft: #f3f6fb;
-            --card: #ffffff;
-            --text: #1b2433;
-            --muted: #586985;
-            --line: rgba(16, 24, 39, 0.1);
-            --accent: #7ce7d4;
-            --accent-strong: #52d9c8;
-            --accent-soft: rgba(124, 231, 212, 0.12);
-            --shadow: rgba(11, 16, 32, 0.12);
-        }
 
-        * {
-            box-sizing: border-box;
-        }
+    <title>Deuterium Client | A forge based ghost client for Minecraft 1.8.9</title>
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%230b1020'/%3E%3Ctext x='32' y='43' text-anchor='middle' fill='%237ce7d4' font-size='28' font-family='Arial' font-weight='700'%3E²H%3C/text%3E%3C/svg%3E">
 
-        html {
-            scroll-behavior: smooth;
-        }
-
-        body {
-            margin: 0;
-            font-family: "Segoe UI", Arial, sans-serif;
-            background: linear-gradient(180deg, var(--bg) 0%, var(--bg-2) 100%);
-            color: var(--text);
-            line-height: 1.6;
-        }
-
-        a {
-            color: inherit;
-            text-decoration: none;
-        }
-
-        .container {
-            width: min(1100px, calc(100% - 32px));
-            margin: 0 auto;
-        }
-
-        .site-header {
-            position: sticky;
-            top: 0;
-            z-index: 20;
-            background: rgba(11, 16, 32, 0.75);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            border-bottom: 1px solid rgba(255,255,255,0.08);
-        }
-
-        .nav {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            min-height: 76px;
-            gap: 24px;
-        }
-
-        .brand {
-            display: inline-flex;
-            align-items: center;
-            gap: 12px;
-            color: #fff;
-            font-weight: 700;
-            letter-spacing: 0.04em;
-        }
-
-        .brand-mark {
-            width: 52px;
-            height: 52px;
-            border-radius: 16px;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            background: linear-gradient(135deg, var(--accent), var(--accent-strong));
-            color: var(--bg);
-            font-size: 1.6rem;
-            font-weight: 900;
-            box-shadow: 0 12px 26px rgba(124, 231, 212, 0.28);
-        }
-
-        .brand-text {
-            font-size: 1.05rem;
-        }
-
-        .nav-links {
-            display: flex;
-            align-items: center;
-            gap: 24px;
-            flex-wrap: wrap;
-        }
-
-        .nav-links a {
-            color: rgba(255,255,255,0.7);
-            font-weight: 500;
-            transition: 0.2s ease;
-        }
-
-        .nav-links a:hover {
-            color: #fff;
-        }
-
-        .hero {
-            background:
-                radial-gradient(circle at top left, rgba(124, 231, 212, 0.18), transparent 25%),
-                linear-gradient(180deg, #0d1322 0%, #111b2d 100%);
-            min-height: 72vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 80px 0 40px;
-        }
-
-        .hero-inner {
-            text-align: center;
-            width: 100%;
-        }
-
-        .hero-logo {
-            width: 112px;
-            height: 112px;
-            margin: 0 auto 18px;
-            border-radius: 28px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: linear-gradient(135deg, rgba(124, 231, 212, 0.18), rgba(124, 231, 212, 0.06));
-            border: 1px solid rgba(124, 231, 212, 0.25);
-            box-shadow: 0 14px 30px rgba(124, 231, 212, 0.12);
-            color: var(--accent);
-            font-size: 3rem;
-            font-weight: 900;
-        }
-
-        .eyebrow {
-            margin: 0;
-            text-transform: uppercase;
-            letter-spacing: 0.12em;
-            font-size: 0.72rem;
-            font-weight: 700;
-            color: var(--accent-strong);
-        }
-
-        .hero h1 {
-            margin: 12px 0 12px;
-            color: #fff;
-            font-size: clamp(3rem, 7vw, 6.8rem);
-            line-height: 1;
-            font-weight: 800;
-            letter-spacing: -0.05em;
-        }
-
-        .tagline {
-            margin: 0 auto;
-            max-width: 720px;
-            color: rgba(255,255,255,0.8);
-            font-size: clamp(1.08rem, 2vw, 1.5rem);
-        }
-
-        .hero-actions {
-            margin-top: 28px;
-            display: flex;
-            justify-content: center;
-            gap: 14px;
-            flex-wrap: wrap;
-        }
-
-        .btn {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            padding: 14px 24px;
-            border-radius: 999px;
-            border: 1px solid transparent;
-            font-weight: 700;
-            transition: 0.2s ease;
-        }
-
-        .btn-primary {
-            background: linear-gradient(135deg, var(--accent), var(--accent-strong));
-            color: var(--bg);
-            box-shadow: 0 12px 24px rgba(124, 231, 212, 0.18);
-        }
-
-        .btn-secondary {
-            background: transparent;
-            color: #fff;
-            border-color: rgba(255,255,255,0.18);
-        }
-
-        .btn:hover {
-            transform: translateY(-1px);
-        }
-
-        .section {
-            padding: 76px 0;
-        }
-
-        .section.muted {
-            background: var(--panel-soft);
-        }
-
-        .section-heading {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-
-        .section-heading h2 {
-            margin: 8px 0 0;
-            font-size: clamp(2rem, 4vw, 3rem);
-            line-height: 1.12;
-            letter-spacing: -0.04em;
-            color: var(--text);
-        }
-
-        .about-panel {
-            background: rgba(255,255,255,0.96);
-            border: 1px solid var(--line);
-            border-radius: 26px;
-            padding: 36px 32px;
-            max-width: 900px;
-            margin: 0 auto;
-            box-shadow: 0 16px 40px var(--shadow);
-        }
-
-        .about-panel p {
-            margin: 0 0 18px;
-            font-size: 1.04rem;
-            color: var(--muted);
-        }
-
-        .about-panel p:last-child {
-            margin-bottom: 0;
-        }
-
-        .feature-grid {
-            display: grid;
-            grid-template-columns: repeat(3, minmax(0, 1fr));
-            gap: 24px;
-        }
-
-        .feature-card {
-            background: var(--card);
-            border: 1px solid var(--line);
-            border-radius: 22px;
-            padding: 30px 22px;
-            text-align: center;
-            box-shadow: 0 14px 32px var(--shadow);
-        }
-
-        .feature-icon {
-            width: 76px;
-            height: 76px;
-            margin: 0 auto 16px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 50%;
-            background: var(--accent-soft);
-            color: var(--accent-strong);
-            font-size: 2rem;
-            font-weight: 700;
-        }
-
-        .feature-card h3 {
-            margin: 0 0 10px;
-            color: var(--text);
-            font-size: 1.5rem;
-        }
-
-        .feature-card p {
-            margin: 0;
-            color: var(--muted);
-            line-height: 1.75;
-        }
-
-        .download-shell {
-            max-width: 900px;
-            margin: 0 auto;
-            background: linear-gradient(135deg, #ffffff 0%, #edf4f9 100%);
-            border: 1px solid var(--line);
-            border-radius: 28px;
-            padding: 38px 32px;
-            box-shadow: 0 18px 42px var(--shadow);
-        }
-
-        .download-copy h2 {
-            margin: 10px 0 18px;
-            font-size: clamp(2rem, 4vw, 2.9rem);
-            line-height: 1.1;
-            letter-spacing: -0.04em;
-            color: var(--text);
-        }
-
-        .download-copy p {
-            margin: 0 0 14px;
-            color: var(--muted);
-            font-size: 1.02rem;
-        }
-
-        .download-copy a {
-            color: var(--accent-strong);
-        }
-
-        .btn-wide {
-            width: 100%;
-            margin-top: 14px;
-        }
-
-        .team-grid {
-            display: grid;
-            grid-template-columns: repeat(2, minmax(0, 1fr));
-            gap: 24px;
-            max-width: 820px;
-            margin: 0 auto;
-        }
-
-        .team-card {
-            background: var(--card);
-            border: 1px solid var(--line);
-            border-radius: 20px;
-            padding: 28px 22px;
-            text-align: center;
-            box-shadow: 0 14px 32px var(--shadow);
-        }
-
-        .team-avatar {
-            width: 78px;
-            height: 78px;
-            margin: 0 auto 14px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: linear-gradient(135deg, rgba(124,231,212,0.18), rgba(124,231,212,0.08));
-            color: var(--accent-strong);
-            font-size: 1.8rem;
-            font-weight: 800;
-        }
-
-        .team-card h3 {
-            margin: 0 0 8px;
-            color: var(--text);
-            font-size: 1.6rem;
-        }
-
-        .team-card p {
-            margin: 0 0 12px;
-            color: var(--muted);
-        }
-
-        .team-card a {
-            color: var(--accent-strong);
-            font-weight: 700;
-        }
-
-        .social-strip {
-            background: var(--panel-soft);
-        }
-
-        .social-links {
-            display: flex;
-            justify-content: center;
-            gap: 24px;
-            font-size: 2rem;
-        }
-
-        .social-links a {
-            color: var(--text);
-        }
-
-        .site-footer {
-            background: #0d1322;
-            color: rgba(255,255,255,0.74);
-            text-align: center;
-            padding: 24px 0;
-            font-size: 0.92rem;
-        }
-
-        @media (max-width: 768px) {
-            .nav {
-                flex-direction: column;
-                justify-content: center;
-                padding: 18px 0;
-            }
-
-            .nav-links {
-                justify-content: center;
-            }
-
-            .feature-grid,
-            .team-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .hero {
-                min-height: 62vh;
-            }
-        }
-    </style>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js" integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF" crossorigin="anonymous"></script>
+    <script src="https://use.fontawesome.com/releases/v5.0.8/js/all.js"></script>
+    <link rel="stylesheet" href="style.css">
 </head>
-<body>
-    <header class="site-header">
-        <div class="container">
-            <nav class="nav" aria-label="Main navigation">
-                <a href="#home" class="brand" aria-label="Deuterium home">
-                    <span class="brand-mark">D</span>
-                    <span class="brand-text">Deuterium</span>
+
+<body data-spy="scroll" data-target="#navbarResponsive">
+
+<section id="nav-bar">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <div class="container-fluid logo">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive">
+                <span class="navbar-toggler-icon"></span>
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarResponsive">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html#home">home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html#about">about</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html#download">download</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="https://zpeanut.github.io/main/changelog" target="_blank">changelog</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html#socials">socials</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+</section>
+
+<div id="home">
+    <div class="video-background">
+        <div class="video-wrap"></div>
+    </div>
+</div>
+
+<div class="caption text-center">
+    <div class="deuterium-mark">²H</div>
+    <h1>deuterium</h1>
+    <h3>A forge based ghost client for Minecraft 1.8.9</h3>
+    <a class="btn btn-lg btn-outline-light rounded-pill" href="index.html#about">Learn more</a>
+</div>
+
+<div id="about" class="offset">
+    <div class="p-4 row justify-content-center">
+        <div class="row welcome text-center">
+            <div class="col-12">
+                <h1 class="display-4 überschrift">About</h1>
+            </div>
+            <hr>
+            <div class="col-12">
+                <p class="lead">Deuterium Client is an advanced, so called "ghost client" for Minecraft version 1.8.9, based on Minecraft Forge. Deuterium is built for giving yourself various utility hacks and optimization tools while staying easy to understand and lightweight.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="features" class="offset">
+    <div class="p-1 container-fluid">
+        <div class="p-1 row text-center">
+            <div class="col-xs-12 col-sm-6 col-md-4">
+                <i class="fas fa-thumbs-up"></i>
+                <h2 class="about-title">straight-forward</h2>
+                <p class="about-text">Deuterium is built to be straightforward and easy to understand. Each module is designed to be simple to use while staying effective.</p>
+            </div>
+            <div class="col-xs-12 col-sm-6 col-md-4">
+                <i class="fas fa-code"></i>
+                <h2 class="about-title">open-source</h2>
+                <p class="about-text">Deuterium is completely open-source and hosted on GitHub. No hidden trackers, no sneaky miners, and no code you can't inspect.</p>
+            </div>
+            <div class="col-sm-12 col-md-4">
+                <i class="fas fa-bars"></i>
+                <h2 class="about-title">easy-to-use advanced gui</h2>
+                <p class="about-text">The Deuterium GUI is clean, highly customizable, and built to feel familiar from the very first launch.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid py-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <div class="info-panel">
+                <div class="info-panel-inner">
+                    <h3>Why players pick Deuterium</h3>
+                    <p>Simple modules, a clean interface, and direct access to the tools you need without distraction.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="download" class="offset">
+    <div class="p-4 container-fluid download-section">
+        <div class="p-4 row">
+            <div class="col-lg-6 download-section">
+                <h1 class="display-4 überschrift dl-title">Download</h1>
+                <hr class="my-4">
+                <br>
+                <p class="dl-text">Deuterium Client is available to download from this site or our GitHub. If you want a quick install, use the installer below or grab the jar for a manual setup.</p>
+                <p class="dl-text">To install Deuterium automatically, open the installer, choose the version you want, and launch a Forge 1.8.9 profile.</p>
+                <p class="dl-text">Don't have Forge installed? <a href="https://files.minecraftforge.net/net/minecraftforge/forge/index_1.8.9.html" target="_blank">Download it here!</a></p>
+                <p class="dl-text">To install Deuterium manually, place the jar file in your /.minecraft/mods folder and run a Forge 1.8.9 version.</p>
+                <br>
+                <a class="btn btn-lg button2" href="https://github.com/bigbetabuild/pls-mjzaor" target="_blank">
+                    <i class="fa fa-download"></i> <b>Download Deuterium</b> (Hosted on GitHub)
                 </a>
-
-                <div class="nav-links">
-                    <a href="#about">About</a>
-                    <a href="#features">Features</a>
-                    <a href="#download">Download</a>
-                    <a href="#socials">Socials</a>
-                </div>
-            </nav>
-        </div>
-    </header>
-
-    <section id="home" class="hero">
-        <div class="container hero-inner">
-            <div>
-                <div class="hero-logo">D</div>
-                <p class="eyebrow">Minecraft 1.8.9 Forge Client</p>
-                <h1>Deuterium</h1>
-                <p class="tagline">A streamlined forge-based ghost client built for clarity, speed, and control.</p>
-
-                <div class="hero-actions">
-                    <a href="#about" class="btn btn-primary">Learn more</a>
-                    <a href="#download" class="btn btn-secondary">Download</a>
-                </div>
             </div>
-        </div>
-    </section>
-
-    <main>
-        <section id="about" class="section">
-            <div class="container">
-                <div class="section-heading">
-                    <p class="eyebrow">About</p>
-                    <h2>Built for players who want simple power.</h2>
-                </div>
-
-                <div class="about-panel">
-                    <p>
-                        Deuterium Client is an advanced ghost client for Minecraft version 1.8.9,
-                        built on top of Minecraft Forge. It is designed to provide powerful utility
-                        while staying straightforward, customizable, and easy to understand.
-                    </p>
-                    <p>
-                        The project focuses on clean functionality, open-source transparency, and a user
-                        experience that feels familiar from the very first launch.
-                    </p>
-                </div>
-            </div>
-        </section>
-
-        <section id="features" class="section muted">
-            <div class="container">
-                <div class="section-heading">
-                    <p class="eyebrow">Features</p>
-                    <h2>Clean tools, strong performance.</h2>
-                </div>
-
-                <div class="feature-grid">
-                    <article class="feature-card">
-                        <div class="feature-icon">✓</div>
-                        <h3>Straightforward</h3>
-                        <p>Built to be simple, fast, and easy to understand without unnecessary clutter.</p>
-                    </article>
-
-                    <article class="feature-card">
-                        <div class="feature-icon">&lt;/&gt;</div>
-                        <h3>Open-source</h3>
-                        <p>Completely transparent and hosted publicly for inspection and trust.</p>
-                    </article>
-
-                    <article class="feature-card">
-                        <div class="feature-icon">≡</div>
-                        <h3>Custom GUI</h3>
-                        <p>Clean, familiar, and highly usable from the first time you open it.</p>
-                    </article>
-                </div>
-            </div>
-        </section>
-
-        <section id="download" class="section">
-            <div class="container">
-                <div class="download-shell">
-                    <div class="download-copy">
-                        <p class="eyebrow">Download</p>
-                        <h2>Get Deuterium</h2>
-                        <p>Deuterium Client is available to download from this site or our GitHub repository.</p>
-                        <p>To install Deuterium automatically, open the installer and launch a Forge 1.8.9 profile.</p>
-                        <p>Don't have Forge installed? <a href="https://files.minecraftforge.net/net/minecraftforge/forge/index_1.8.9.html" target="_blank" rel="noreferrer">Download it here.</a></p>
-                        <a href="https://github.com/bigbetabuild/pls-mjzaor" target="_blank" rel="noreferrer" class="btn btn-primary btn-wide">Download Deuterium</a>
+            <div class="col-lg-6">
+                <div class="download-preview">
+                    <div class="download-preview-box">
+                        <span class="mini-mark">²H</span>
+                        <h4>Clean, fast, stable</h4>
+                        <p>Built for players who want a high-performance client without the clutter.</p>
                     </div>
                 </div>
             </div>
-        </section>
-
-        <section id="socials" class="section muted">
-            <div class="container">
-                <div class="section-heading">
-                    <p class="eyebrow">Developer Team</p>
-                    <h2>People behind the project.</h2>
-                </div>
-
-                <div class="team-grid">
-                    <article class="team-card">
-                        <div class="team-avatar">Z</div>
-                        <h3>zPeanut</h3>
-                        <p>Head Developer</p>
-                        <a href="https://github.com/zPeanut/" target="_blank" rel="noreferrer">Visit on GitHub</a>
-                    </article>
-
-                    <article class="team-card">
-                        <div class="team-avatar">U</div>
-                        <h3>UltramoxX</h3>
-                        <p>Developer</p>
-                        <a href="https://github.com/Morten-Renner/" target="_blank" rel="noreferrer">Visit on GitHub</a>
-                    </article>
-                </div>
-            </div>
-        </section>
-
-        <section class="section social-strip">
-            <div class="container">
-                <div class="section-heading">
-                    <p class="eyebrow">Socials</p>
-                </div>
-
-                <div class="social-links" aria-label="Social links">
-                    <a href="https://www.youtube.com/c/zPeanut" target="_blank" rel="noreferrer" aria-label="YouTube">▶</a>
-                    <a href="https://github.com/bigbetabuild/pls-mjzaor" target="_blank" rel="noreferrer" aria-label="GitHub">◌</a>
-                </div>
-            </div>
-        </section>
-    </main>
-
-    <footer class="site-footer">
-        <div class="container">
-            <p>Copyright © Deuterium Client 2017 - 2022 | All rights reserved.</p>
         </div>
-    </footer>
+    </div>
+</div>
+
+<div id="socials" class="offset">
+    <div class="p-2 row justify-content-center dev-section">
+        <div class="row welcome text-center">
+            <div class="col-12">
+                <h1 class="display-4 überschrift text-center">Developer Team</h1>
+            </div>
+            <hr>
+        </div>
+    </div>
+    <div class="p-3 container-fluid dev-section">
+        <div class="p-2 row">
+            <div class="col-md-5 text-center col-centered">
+                <div class="ml-6 card">
+                    <div class="dev-avatar">Z</div>
+                    <div class="card-body">
+                        <h4 class="card-title">zPeanut</h4>
+                        <p class="card-text">Head Developer</p>
+                        <a href="https://github.com/zPeanut/" target="_blank" class="btn btn-outline-secondary">Visit on Github</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-5 text-center col-centered">
+                <div class="mr-6 card">
+                    <div class="dev-avatar alt">U</div>
+                    <div class="card-body">
+                        <h4 class="card-title">UltramoxX</h4>
+                        <p class="card-text">Developer</p>
+                        <a href="https://github.com/Morten-Renner/" target="_blank" class="btn btn-outline-secondary">Visit on Github</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="p-1 container-fluid socials-section">
+    <div class="p-2 row text-center">
+        <div class="col-12">
+            <h1 class="display-4 überschrift">Socials</h1>
+        </div>
+        <hr class="my-8">
+        <div class="p-1 col-12 social padding">
+            <a href="https://www.youtube.com/c/zPeanut" target="_blank"><i class="fab fa-youtube"></i></a>
+            <a href="https://github.com/bigbetabuild/pls-mjzaor" target="_blank"><i class="fab fa-github"></i></a>
+        </div>
+    </div>
+</div>
+
+<footer>
+    <div class="footer">
+        <div class="container-fluid">
+            <div class="row text-center">
+                <div class="col-md-12">
+                    <p class="footer-text">Copyright © Deuterium Client 2017 - 2022 | All rights reserved.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>
+
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
